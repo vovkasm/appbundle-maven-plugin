@@ -25,6 +25,7 @@ package sh.tak.appbundler;
  * @author Zhenya Nyden, Schwarmi Bamamoto
  */
 public class FileSet extends org.apache.maven.model.FileSet {
+    private static final long serialVersionUID = 1L;
 
     /**
      * When false, disables the default excludes.

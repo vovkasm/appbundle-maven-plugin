@@ -27,7 +27,9 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.xml.stream.XMLInputFactory;
+
 import org.apache.commons.lang.SystemUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.layout.ArtifactRepositoryLayout;
@@ -48,6 +50,7 @@ import org.codehaus.plexus.util.IOUtil;
 import org.codehaus.plexus.util.cli.CommandLineException;
 import org.codehaus.plexus.util.cli.Commandline;
 import org.codehaus.plexus.velocity.VelocityComponent;
+
 import sh.tak.appbundler.logging.MojoLogChute;
 
 /**
@@ -284,6 +287,7 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
      * @throws MojoExecutionException If an unexpected error occurs during
      * packaging of the bundle.
      */
+    @Override
     public void execute() throws MojoExecutionException {
 
         // 1. Create and set up directories
@@ -399,8 +403,8 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
             Commandline chmod = new Commandline();
             try {
                 chmod.setExecutable("chmod");
-                chmod.createArgument().setValue("755");
-                chmod.createArgument().setValue(launcher.getAbsolutePath());
+                chmod.createArg().setValue("755");
+                chmod.createArg().setValue(launcher.getAbsolutePath());
 
                 chmod.execute();
             } catch (CommandLineException e) {
@@ -421,10 +425,10 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
                         createApplicationsSymlink();
                     }
                     dmg.setExecutable("hdiutil");
-                    dmg.createArgument().setValue("create");
-                    dmg.createArgument().setValue("-srcfolder");
-                    dmg.createArgument().setValue(buildDirectory.getAbsolutePath());
-                    dmg.createArgument().setValue(diskImageFile.getAbsolutePath());
+                    dmg.createArg().setValue("create");
+                    dmg.createArg().setValue("-srcfolder");
+                    dmg.createArg().setValue(buildDirectory.getAbsolutePath());
+                    dmg.createArg().setValue(diskImageFile.getAbsolutePath());
 
                     try {
                         dmg.execute().waitFor();
@@ -445,9 +449,9 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
                         Commandline internetEnableCommand = new Commandline();
 
                         internetEnableCommand.setExecutable("hdiutil");
-                        internetEnableCommand.createArgument().setValue("internet-enable");
-                        internetEnableCommand.createArgument().setValue("-yes");
-                        internetEnableCommand.createArgument().setValue(diskImageFile.getAbsolutePath());
+                        internetEnableCommand.createArg().setValue("internet-enable");
+                        internetEnableCommand.createArg().setValue("-yes");
+                        internetEnableCommand.createArg().setValue(diskImageFile.getAbsolutePath());
 
                         internetEnableCommand.execute();
                     } catch (CommandLineException ex) {
@@ -461,15 +465,15 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
                 Commandline linux_dmg = new Commandline();
                 try {
                     linux_dmg.setExecutable("genisoimage");
-                    linux_dmg.createArgument().setValue("-V");
-                    linux_dmg.createArgument().setValue(bundleName);
-                    linux_dmg.createArgument().setValue("-D");
-                    linux_dmg.createArgument().setValue("-R");
-                    linux_dmg.createArgument().setValue("-apple");
-                    linux_dmg.createArgument().setValue("-no-pad");
-                    linux_dmg.createArgument().setValue("-o");
-                    linux_dmg.createArgument().setValue(diskImageFile.getAbsolutePath());
-                    linux_dmg.createArgument().setValue(buildDirectory.getAbsolutePath());
+                    linux_dmg.createArg().setValue("-V");
+                    linux_dmg.createArg().setValue(bundleName);
+                    linux_dmg.createArg().setValue("-D");
+                    linux_dmg.createArg().setValue("-R");
+                    linux_dmg.createArg().setValue("-apple");
+                    linux_dmg.createArg().setValue("-no-pad");
+                    linux_dmg.createArg().setValue("-o");
+                    linux_dmg.createArg().setValue(diskImageFile.getAbsolutePath());
+                    linux_dmg.createArg().setValue(buildDirectory.getAbsolutePath());
 
                     try {
                         linux_dmg.execute().waitFor();
@@ -797,9 +801,9 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
     private void createApplicationsSymlink() throws MojoExecutionException, CommandLineException {
         Commandline symlink = new Commandline();
         symlink.setExecutable("ln");
-        symlink.createArgument().setValue("-s");
-        symlink.createArgument().setValue("/Applications");
-        symlink.createArgument().setValue(buildDirectory.getAbsolutePath());
+        symlink.createArg().setValue("-s");
+        symlink.createArg().setValue("/Applications");
+        symlink.createArg().setValue(buildDirectory.getAbsolutePath());
         try {
             symlink.execute().waitFor();
         } catch (InterruptedException ex) {
@@ -814,7 +818,7 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
             return;
         }
         remSymlink.setExecutable("rm");
-        remSymlink.createArgument().setValue(symlink);
+        remSymlink.createArg().setValue(symlink);
         try {
             remSymlink.execute().waitFor();
         } catch (InterruptedException ex) {

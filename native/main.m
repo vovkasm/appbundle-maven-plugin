@@ -398,6 +398,9 @@ NSString * findJREDylib (
     //  try to extract a major version number.
         if (errRead != nil) {
             int version = 0;
+            if (isDebugging) {
+            	DLog(@"errRead %@", errRead);
+            }
 
             // The result of the version command is 'java version "1.x"' or 'java version "9"'
             NSRange vrange = [errRead rangeOfString:@"java version \""];
@@ -484,15 +487,27 @@ NSString * findJDKDylib (
         }
 
         int version = 0;
-
+		if (isDebugging) {
+			DLog (@"outRead %@", outRead);
+		}
         NSRange vrange = [outRead rangeOfString:@"jdk1."];
-        if (vrange.location == NSNotFound) {
+        if (NSNotFound != vrange.location) {
+            // remove the leading jdk
+            vrange.location += 3;
+        }
+        if (NSNotFound == vrange.location) {
             // try the changed version layout from version 9
             vrange = [outRead rangeOfString:@"jdk-"];
-            vrange.location += 4;
-        } else {
-            // otherwise remove the leading jdk
-            vrange.location += 3;
+ 			if (NSNotFound != vrange.location) {
+                vrange.location += 4;
+            }
+		}
+		if (NSNotFound == vrange.location) {
+			// Try corretto format ("amazon-corretto-8.jdk")
+            vrange = [outRead rangeOfString:@"amazon-corretto-"];
+ 			if (NSNotFound != vrange.location) {
+                vrange.location += 16;
+            }
         }
 
         if (vrange.location != NSNotFound) {

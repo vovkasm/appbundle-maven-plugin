@@ -552,10 +552,10 @@ public class CreateApplicationBundleMojo extends AbstractMojo {
 			if (useJarWithDependenciesInsteadOfProjectArtifact) {
 				List<Artifact> attachedArtifacts = project.getAttachedArtifacts();
 				Optional<Artifact> jarWithDependencies = attachedArtifacts.stream().filter(a -> a.getFile().getName().endsWith("-jar-with-dependencies.jar")).findFirst();
-				if (jarWithDependencies.isEmpty())
-					getLog().error("Could not find jar-with-dependencies; found artifacts: " + attachedArtifacts.stream().map(a -> a.getFile().getName()).collect(Collectors.joining(",")));
-				else
+				if (jarWithDependencies.isPresent())
 					FileUtils.copyFile(jarWithDependencies.get().getFile(), new File(javaDirectory, jarWithDependencies.get().getFile().getName()));
+				else
+					getLog().error("Could not find jar-with-dependencies; found artifacts: " + attachedArtifacts.stream().map(a -> a.getFile().getName()).collect(Collectors.joining(",")));
 				
 			} else {
 				

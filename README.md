@@ -4,9 +4,9 @@ Maven plugin that creates an Application Bundle for OS X containing all your pro
 
 ```xml
 <plugin>
-  <groupId>sh.tak.appbundler</groupId>
+  <groupId>com.github.vovkasm</groupId>
   <artifactId>appbundle-maven-plugin</artifactId>
-  <version>1.2.0</version>
+  <version>2.0.0</version>
   <configuration>
     <mainClass>your.app.MainClass</mainClass>
   </configuration>
